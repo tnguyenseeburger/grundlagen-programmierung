@@ -303,8 +303,8 @@ def leihe_buch_aus():
         if buch is None:
             raise ValueError("Buch nicht gefunden.")
 
-        if not buch["verfuegbar"]:
-            raise ValueError("Buch ist bereits ausgeliehen.")
+        if not buch["verfuegbar"]:       
+            raise ValueError("Buch ist bereits ausgeliehen. Bitte vormerken.")
 
         if len(person["ausgeliehen"]) >= 5:
             raise ValueError("Ausleihlimit erreicht.")

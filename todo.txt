@@ -9,10 +9,6 @@ Die geforderten Testfälle in einer kleinen Testübersicht oder separaten Testda
 
 ------------------------------------
 
-Bei Buchsuche ausgeben, wer das Buch aktuell ausgeliehen hat und wie lange noch
-
-------------------------------------
-
 Bei fehlgeschlagener Ausleihe weil das Buch bereits weg ist, direkt abfragen, ob das Buch vorgemerkt werden soll
 
 ------------------------------------

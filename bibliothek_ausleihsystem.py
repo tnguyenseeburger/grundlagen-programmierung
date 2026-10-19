@@ -627,7 +627,11 @@ def aendere_tag():
 # Hauptprogramm
 # -----------------------------
 
-while True and pruefe_datenbestand():
+# der Datenbestand wird beim Start geprüft, um Inkonsistenzen zu erkennen
+startDataCorrect = pruefe_datenbestand()
+
+#der Hauptmenü-Loop wird nur gestartet, wenn die Startdaten korrekt sind
+while startDataCorrect:
 
     print("\n===== HAUPTMENÜ =====")
     print("1 Buch suchen")

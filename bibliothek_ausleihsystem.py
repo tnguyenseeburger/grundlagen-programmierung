@@ -196,6 +196,20 @@ def suche_nutzer_auswahl():
 
 
 # -----------------------------
+# Anzeigen
+# -----------------------------
+
+def zeige_buecher():
+    print("\nBücher:")
+    for buch in buecher:
+        print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
+
+def zeige_nutzer():
+    print("\nNutzer:")
+    for person in nutzer:
+        print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
+
+# -----------------------------
 # Hinzufügen
 # -----------------------------
 
@@ -758,13 +772,8 @@ while startDataCorrect:
         merke_buch_vor()
 
     elif auswahl == "5":
-        print("\nBücher:")
-        for buch in buecher:
-            print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
-
-        print("\nNutzer:")
-        for person in nutzer:
-            print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
+        zeige_buecher()
+        zeige_nutzer()
 
     elif auswahl == "6":
         aendere_tag()

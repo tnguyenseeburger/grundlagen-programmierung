@@ -11,7 +11,7 @@ aktueller_tag = 20
 buecher = [
     {"id": 101, "titel": "Python Basics", "kategorie": "Informatik", "verfuegbar": True, "ausleihen": 8},
     {"id": 102, "titel": "Algorithmen", "kategorie": "Informatik", "verfuegbar": False, "ausleihen": 12},
-    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 10},
+    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science", "verfuegbar": False, "ausleihen": 10},
     {"id": 104, "titel": "Maschinelles Lernen", "kategorie": "Data Science", "verfuegbar": False, "ausleihen": 5},
     {"id": 105, "titel": "Künstliche Intelligenz", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 7},
 ]
@@ -20,7 +20,8 @@ nutzer = [
     {   "id": 12,
         "name": "Anna",
         "ausgeliehen": [
-            {"buch_id": 102, "start": 7}
+            {"buch_id": 102, "start": 7},
+            {"buch_id": 103, "start": 7}
         ],
         "vormerkungen": []
     },
@@ -80,7 +81,8 @@ def suche_buecher():
             if buch:
                 print(
                     f"\nBuch gefunden: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']})"
+                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
+                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
                 )
             else:
                 print("Buch nicht gefunden.")
@@ -113,6 +115,99 @@ def suche_nutzer(nutzer_id):
             return person
     return None
 
+
+def suche_nutzer_name(name):
+    name = name.lower()
+    treffer = []
+
+    for person in nutzer:
+        if name in person["name"].lower():
+            treffer.append(person)
+
+    return treffer
+
+
+def suche_nutzer_auswahl():
+    print("\nSuchart:")
+    print("1 Nutzer-ID")
+    print("2 Name")
+    suchart = input("Auswahl: ")
+
+    if suchart == "1":
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            person = suche_nutzer(nutzer_id)
+
+            if person:
+                ausgelieheneIDs = ""
+                for ausleihe in person["ausgeliehen"]:
+                    if ausgelieheneIDs:
+                        ausgelieheneIDs += ", "
+                    ausgelieheneIDs += str(ausleihe["buch_id"])
+                vorgemerkteIDs = ""
+                for vorgemerkt in person["vormerkungen"]:
+                    if vorgemerkteIDs:
+                        vorgemerkteIDs += ", "
+                    vorgemerkteIDs += str(vorgemerkt)
+                print(
+                    f"\nNutzer gefunden: {person['name']} "
+                    f"(ID: {person['id']})"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ""} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
+                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
+                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ""} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
+                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
+                )
+            else:
+                print("Nutzer nicht gefunden.")
+
+        except ValueError:
+            print("Ungültige Eingabe.")
+
+    elif suchart == "2":
+        name = input("Name: ")
+        treffer = suche_nutzer_name(name)
+
+        if treffer:
+            print("\nGefundene Nutzer:")
+            for person in treffer:
+                vorgemerkteIDs = ""
+                for vorgemerkt in person["vormerkungen"]:
+                    if vorgemerkteIDs:
+                        vorgemerkteIDs += ", "
+                    vorgemerkteIDs += str(vorgemerkt)
+                ausgelieheneIDs = ""
+                for ausleihe in person["ausgeliehen"]:
+                    if ausgelieheneIDs:
+                        ausgelieheneIDs += ", "
+                    ausgelieheneIDs += str(ausleihe["buch_id"])
+                print(
+                    f"--- Nutzer: {person['name']} "
+                    f"(ID: {person['id']}) ---"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ''} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
+                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
+                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
+                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
+                )
+        else:
+            print("Keine Nutzer gefunden.")
+
+    else:
+        print("Ungültige Auswahl.")
+
+
+# -----------------------------
+# Anzeigen
+# -----------------------------
+
+def zeige_buecher():
+    print("\nBücher:")
+    for buch in buecher:
+        print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
+
+def zeige_nutzer():
+    print("\nNutzer:")
+    for person in nutzer:
+        print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
 
 # -----------------------------
 # Hinzufügen
@@ -658,7 +753,8 @@ while startDataCorrect:
     print("7 Statistik und Bericht")
     print("8 Buch hinzufügen")
     print("9 Nutzer hinzufügen")
-    print("10 Leihfrist prüfen")
+    print("10 Nutzer suchen")
+    print("11 Leihfristen prüfen")
     print("0 Beenden")
 
     auswahl = input("Auswahl: ")
@@ -676,13 +772,8 @@ while startDataCorrect:
         merke_buch_vor()
 
     elif auswahl == "5":
-        print("\nBücher:")
-        for buch in buecher:
-            print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
-
-        print("\nNutzer:")
-        for person in nutzer:
-            print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
+        zeige_buecher()
+        zeige_nutzer()
 
     elif auswahl == "6":
         aendere_tag()
@@ -697,6 +788,9 @@ while startDataCorrect:
         fuege_nutzer_hinzu()
 
     elif auswahl == "10":
+        suche_nutzer_auswahl()
+
+    elif auswahl == "11":
         pruefe_leihfrist()
 
     elif auswahl == "0":

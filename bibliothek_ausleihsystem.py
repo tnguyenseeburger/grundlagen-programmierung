@@ -124,6 +124,49 @@ def suche_nutzer_name(name):
 
     return treffer
 
+
+def suche_nutzer_auswahl():
+    print("\nSuchart:")
+    print("1 Nutzer-ID")
+    print("2 Name")
+    suchart = input("Auswahl: ")
+
+    if suchart == "1":
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            person = suche_nutzer(nutzer_id)
+
+            if person:
+                print(
+                    f"\nNutzer gefunden: {person['name']} "
+                    f"(ID: {person['id']})"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])}"
+                )
+            else:
+                print("Nutzer nicht gefunden.")
+
+        except ValueError:
+            print("Ungültige Eingabe.")
+
+    elif suchart == "2":
+        name = input("Name: ")
+        treffer = suche_nutzer_name(name)
+
+        if treffer:
+            print("\nGefundene Nutzer:")
+            for person in treffer:
+                print(
+                    f"Nutzer: {person['name']} "
+                    f"(ID: {person['id']})"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])}"
+                )
+        else:
+            print("Keine Nutzer gefunden.")
+
+    else:
+        print("Ungültige Auswahl.")
+
+
 # -----------------------------
 # Hinzufügen
 # -----------------------------
@@ -668,7 +711,8 @@ while startDataCorrect:
     print("7 Statistik und Bericht")
     print("8 Buch hinzufügen")
     print("9 Nutzer hinzufügen")
-    print("10 Leihfrist prüfen")
+    print("10 Nutzer suchen")
+    print("11 Leihfristen prüfen")
     print("0 Beenden")
 
     auswahl = input("Auswahl: ")
@@ -707,6 +751,9 @@ while startDataCorrect:
         fuege_nutzer_hinzu()
 
     elif auswahl == "10":
+        suche_nutzer_auswahl()
+
+    elif auswahl == "11":
         pruefe_leihfrist()
 
     elif auswahl == "0":

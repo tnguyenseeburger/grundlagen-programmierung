@@ -1,3 +1,0 @@
-2. Keine Validierung leerer Eingaben
-Beim Hinzufügen können leere Titel, Kategorien oder Nutzernamen eingegeben werden:
-Das ist wahrscheinlich kein Hauptkriterium der Aufgabe, wäre aber eine sinnvolle Ergänzung.

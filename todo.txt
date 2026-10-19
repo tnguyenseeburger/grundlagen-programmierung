@@ -2,17 +2,6 @@ Datensätze ergänzen, wenn wir sie bekommen
 
 ---------------------------------------
 
-Eine Benutzerfunktion für die Nutzer-Suche ergänzen und im Hauptmenü anbieten.
-
-suche_nutzer() existiert nur als interne Hilfsfunktion.
-Eine Nutzer-Suche ist im Hauptmenü nicht auswählbar.
-Die Aufgabenstellung nennt ausdrücklich „Nutzer suchen/ergänzen“.
-
-Die Aufgabenstellung verlangt unter anderem, dass der Ausleihstatus angezeigt wird.
-Das erfolgt zwar bei der Buchanzeige, aber die Nutzer-Suche selbst fehlt als Menüfunktion.
-
---------------------------------
-
 Die Aufgabenstellung verlangt, bestimmte Fälle zu dokumentieren und zu testen.
 In der vorliegenden Datei gibt es keine automatisierten Tests und keine dokumentierte Testübersicht.
 

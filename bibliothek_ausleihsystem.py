@@ -114,6 +114,16 @@ def suche_nutzer(nutzer_id):
     return None
 
 
+def suche_nutzer_name(name):
+    name = name.lower()
+    treffer = []
+
+    for person in nutzer:
+        if name in person["name"].lower():
+            treffer.append(person)
+
+    return treffer
+
 # -----------------------------
 # Hinzufügen
 # -----------------------------

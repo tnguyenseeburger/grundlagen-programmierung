@@ -156,6 +156,8 @@ def fuege_nutzer_hinzu():
             raise ValueError("Diese Nutzer-ID existiert bereits.")
 
         name = input("Name: ")
+        if name == "":
+            raise ValueError("Name darf nicht leer sein.")
 
         neuer_nutzer = {
             "id": nutzer_id,

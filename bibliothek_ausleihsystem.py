@@ -528,6 +528,12 @@ def pruefe_datenbestand():
             #prüfen, ob die Buch-ID gültig ist und der Startwert eine positive Zahl ist
             buch_id = ausleihe["buch_id"]
             start = ausleihe["start"]
+            if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+                fehler.append(
+                    f"{bezeichnung} enthält eine ungültige Buch-ID."
+                )
+                ausleihe_position += 1
+                continue
             if buch_id not in buch_ids:
                 fehler.append(
                     f"{bezeichnung} verweist auf das unbekannte Buch "
@@ -582,6 +588,10 @@ def pruefe_datenbestand():
             continue
 
         buch_id = buch["id"]
+        # prüfen, ob die Buch-ID gültig ist
+        if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+            buch_position += 1
+            continue
         ist_ausgeliehen = buch_id in ausgeliehene_buecher
         if ("verfuegbar" in buch
                 and buch["verfuegbar"] == ist_ausgeliehen):

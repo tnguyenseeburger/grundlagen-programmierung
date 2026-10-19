@@ -150,7 +150,8 @@ def fuege_buch_hinzu():
 def fuege_nutzer_hinzu():
     try:
         nutzer_id = int(input("Nutzer-ID: "))
-
+        if nutzer_id < 0:
+            raise ValueError("Nutzer-ID darf nicht negativ sein.")
         if suche_nutzer(nutzer_id):
             raise ValueError("Diese Nutzer-ID existiert bereits.")
 

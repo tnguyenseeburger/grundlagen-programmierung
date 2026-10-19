@@ -138,10 +138,16 @@ def suche_nutzer_auswahl():
             person = suche_nutzer(nutzer_id)
 
             if person:
+                bücherIDs = ""
+                for ausleihe in person["ausgeliehen"]:
+                    if bücherIDs:
+                        bücherIDs += ", "
+                    bücherIDs += str(ausleihe["buch_id"])
                 print(
                     f"\nNutzer gefunden: {person['name']} "
                     f"(ID: {person['id']})"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])}"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])} {"Stück mit folgenden IDs: " if bücherIDs else ""}"
+                    f"{bücherIDs if bücherIDs else 'Keine'}"
                 )
             else:
                 print("Nutzer nicht gefunden.")
@@ -156,10 +162,16 @@ def suche_nutzer_auswahl():
         if treffer:
             print("\nGefundene Nutzer:")
             for person in treffer:
+                bücherIDs = ""
+                for ausleihe in person["ausgeliehen"]:
+                    if bücherIDs:
+                        bücherIDs += ", "
+                    bücherIDs += str(ausleihe["buch_id"])
                 print(
                     f"Nutzer: {person['name']} "
                     f"(ID: {person['id']})"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])}"
+                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen'])} {"Stück mit folgenden IDs: " if bücherIDs else ""}"
+                    f"{bücherIDs if bücherIDs else 'Keine'}"
                 )
         else:
             print("Keine Nutzer gefunden.")

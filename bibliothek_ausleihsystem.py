@@ -358,9 +358,9 @@ while True:
             buch = suche_buch(buch_id)
 
             if buch:
-                print(buch)
+                print(f"\nBuch gefunden: {buch['titel']} (Kategorie: {buch['kategorie']})")
             else:
-                print("Nicht gefunden.")
+                print("Buch nicht gefunden.")
 
         except ValueError:
             print("Ungültige Eingabe.")
@@ -377,11 +377,11 @@ while True:
     elif auswahl == "5":
         print("\nBücher:")
         for buch in buecher:
-            print(buch)
+            print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
 
         print("\nNutzer:")
         for person in nutzer:
-            print(person)
+            print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
 
     elif auswahl == "6":
         aendere_tag()

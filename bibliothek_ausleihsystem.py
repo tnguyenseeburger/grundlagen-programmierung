@@ -122,14 +122,14 @@ def fuege_buch_hinzu():
         if suche_buch(buch_id):
             raise ValueError("Diese Buch-ID existiert bereits.")
 
-        titel = input("Titel: ")
+        titel = input("Titel: ").strip()
 
-        if titel == "":
+        if not titel:
             raise ValueError("Titel darf nicht leer sein.")
 
-        kategorie = input("Kategorie: ")
+        kategorie = input("Kategorie: ").strip()
 
-        if kategorie == "":
+        if not kategorie:
             raise ValueError("Kategorie darf nicht leer sein.")
 
         neues_buch = {
@@ -155,8 +155,8 @@ def fuege_nutzer_hinzu():
         if suche_nutzer(nutzer_id):
             raise ValueError("Diese Nutzer-ID existiert bereits.")
 
-        name = input("Name: ")
-        if name == "":
+        name = input("Name: ").strip()
+        if not name:
             raise ValueError("Name darf nicht leer sein.")
 
         neuer_nutzer = {

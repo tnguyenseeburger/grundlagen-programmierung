@@ -123,7 +123,14 @@ def fuege_buch_hinzu():
             raise ValueError("Diese Buch-ID existiert bereits.")
 
         titel = input("Titel: ")
+
+        if titel == "":
+            raise ValueError("Titel darf nicht leer sein.")
+
         kategorie = input("Kategorie: ")
+
+        if kategorie == "":
+            raise ValueError("Kategorie darf nicht leer sein.")
 
         neues_buch = {
             "id": buch_id,

@@ -9,14 +9,10 @@ aktueller_tag = 20
 # -----------------------------
 
 buecher = [
-    {"id": 101, "titel": "Python Basics", "kategorie": "Informatik",
-     "verfuegbar": True, "ausleihen": 8},
-
-    {"id": 102, "titel": "Algorithmen", "kategorie": "Informatik",
-     "verfuegbar": False, "ausleihen": 12},
-
-    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science",
-     "verfuegbar": True, "ausleihen": 10}
+    {"id": 101, "titel": "Python Basics", "kategorie": "Informatik", "verfuegbar": True, "ausleihen": 8},
+    {"id": 102, "titel": "Algorithmen", "kategorie": "Informatik", "verfuegbar": False, "ausleihen": 12},
+    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 10}
+    
 ]
 
 nutzer = [

@@ -407,9 +407,7 @@ def merke_buch_vor():
             raise ValueError("Buch nicht gefunden.")
 
         if buch["verfuegbar"]:
-            raise ValueError(
-                "Verfügbare Bücher dürfen nicht vorgemerkt werden."
-            )
+            raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
 
         if buch_id in person["vormerkungen"]:
             raise ValueError("Doppelte Vormerkung nicht erlaubt.")

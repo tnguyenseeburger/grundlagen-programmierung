@@ -49,6 +49,18 @@ def suche_buch(buch_id):
     return None
 
 
+def suche_buecher_text(suchtext):
+    suchtext = suchtext.lower()
+    treffer = []
+
+    for buch in buecher:
+        if (suchtext in buch["titel"].lower()
+                or suchtext in buch["kategorie"].lower()):
+            treffer.append(buch)
+
+    return treffer
+
+
 def suche_nutzer(nutzer_id):
     for person in nutzer:
         if person["id"] == nutzer_id:
@@ -353,17 +365,44 @@ while True:
     auswahl = input("Auswahl: ")
 
     if auswahl == "1":
-        try:
-            buch_id = int(input("Buch-ID: "))
-            buch = suche_buch(buch_id)
+        print("\nSuchart:")
+        print("1 Buch-ID")
+        print("2 Titel oder Kategorie")
+        suchart = input("Auswahl: ")
 
-            if buch:
-                print(f"\nBuch gefunden: {buch['titel']} (Kategorie: {buch['kategorie']})")
+        if suchart == "1":
+            try:
+                buch_id = int(input("Buch-ID: "))
+                buch = suche_buch(buch_id)
+
+                if buch:
+                    print(
+                        f"\nBuch gefunden: {buch['titel']} "
+                        f"(Kategorie: {buch['kategorie']})"
+                    )
+                else:
+                    print("Buch nicht gefunden.")
+
+            except ValueError:
+                print("Ungültige Eingabe.")
+
+        elif suchart == "2":
+            suchtext = input("Suchtext: ")
+            treffer = suche_buecher_text(suchtext)
+
+            if treffer:
+                print("\nGefundene Bücher:")
+                for buch in treffer:
+                    print(
+                        f"Buch: {buch['titel']} "
+                        f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']} - "
+                        f"Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
+                    )
             else:
-                print("Buch nicht gefunden.")
+                print("Keine Bücher gefunden.")
 
-        except ValueError:
-            print("Ungültige Eingabe.")
+        else:
+            print("Ungültige Auswahl.")
 
     elif auswahl == "2":
         leihe_buch_aus()

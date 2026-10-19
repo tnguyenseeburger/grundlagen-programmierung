@@ -117,6 +117,8 @@ def fuege_buch_hinzu():
     try:
         buch_id = int(input("Buch-ID: "))
 
+        if buch_id < 0:
+            raise ValueError("Buch-ID darf nicht negativ sein.")
         if suche_buch(buch_id):
             raise ValueError("Diese Buch-ID existiert bereits.")
 

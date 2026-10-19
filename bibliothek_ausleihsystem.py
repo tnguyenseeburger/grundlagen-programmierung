@@ -25,7 +25,7 @@ nutzer = [
             {"buch_id": 102, "start": 7},
             {"buch_id": 103, "start": 7}
         ],
-        "vormerkungen": set()
+        "vormerkungen": []
     },
 
     {   "id": 13,
@@ -33,13 +33,15 @@ nutzer = [
         "ausgeliehen": [
             {"buch_id": 104, "start": 5}
         ],
-        "vormerkungen": set()
+        "vormerkungen": []
     },
 
     {   "id": 14,
         "name": "Lisa",
         "ausgeliehen": [],
-        "vormerkungen": set(202, 204)
+        "vormerkungen": [
+            102, 104
+        ]
     }
 ]
 
@@ -405,12 +407,14 @@ def merke_buch_vor():
             raise ValueError("Buch nicht gefunden.")
 
         if buch["verfuegbar"]:
-            raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
+            raise ValueError(
+                "Verfügbare Bücher dürfen nicht vorgemerkt werden."
+            )
 
         if buch_id in person["vormerkungen"]:
             raise ValueError("Doppelte Vormerkung nicht erlaubt.")
 
-        person["vormerkungen"].add(buch_id)
+        person["vormerkungen"].append(buch_id)
 
         print("Vormerkung erfolgreich.")
 

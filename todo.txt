@@ -9,6 +9,10 @@ Die geforderten Testfälle in einer kleinen Testübersicht oder separaten Testda
 
 ------------------------------------
 
+Bei fehlgeschlagener Ausleihe weil das Buch bereits weg ist, direkt abfragen, ob das Buch vorgemerkt werden soll
+
+------------------------------------
+
 Optional das Hauptprogramm in main() kapseln, damit die Funktionen einfacher getestet werden können.
 
 Das Hauptprogramm wird bereits beim Import ausgeführt.

@@ -80,7 +80,8 @@ def suche_buecher():
             if buch:
                 print(
                     f"\nBuch gefunden: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']})"
+                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
+                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
                 )
             else:
                 print("Buch nicht gefunden.")

@@ -11,8 +11,9 @@ aktueller_tag = 20
 buecher = [
     {"id": 101, "titel": "Python Basics", "kategorie": "Informatik", "verfuegbar": True, "ausleihen": 8},
     {"id": 102, "titel": "Algorithmen", "kategorie": "Informatik", "verfuegbar": False, "ausleihen": 12},
-    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 10}
-    
+    {"id": 103, "titel": "Datenanalyse", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 10},
+    {"id": 104, "titel": "Maschinelles Lernen", "kategorie": "Data Science", "verfuegbar": False, "ausleihen": 5},
+    {"id": 105, "titel": "Künstliche Intelligenz", "kategorie": "Data Science", "verfuegbar": True, "ausleihen": 7},
 ]
 
 nutzer = [
@@ -28,8 +29,19 @@ nutzer = [
     {
         "id": 13,
         "name": "Max",
-        "ausgeliehen": [],
+        "ausgeliehen": [
+            {"buch_id": 104, "start": 5}
+        ],
         "vormerkungen": []
+    },
+
+    {
+        "id": 14,
+        "name": "Lisa",
+        "ausgeliehen": [],
+        "vormerkungen": [
+            102, 104
+        ]
     }
 ]
 

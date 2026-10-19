@@ -122,14 +122,14 @@ def fuege_buch_hinzu():
         if suche_buch(buch_id):
             raise ValueError("Diese Buch-ID existiert bereits.")
 
-        titel = input("Titel: ")
+        titel = input("Titel: ").strip()
 
-        if titel == "":
+        if not titel:
             raise ValueError("Titel darf nicht leer sein.")
 
-        kategorie = input("Kategorie: ")
+        kategorie = input("Kategorie: ").strip()
 
-        if kategorie == "":
+        if not kategorie:
             raise ValueError("Kategorie darf nicht leer sein.")
 
         neues_buch = {
@@ -155,8 +155,8 @@ def fuege_nutzer_hinzu():
         if suche_nutzer(nutzer_id):
             raise ValueError("Diese Nutzer-ID existiert bereits.")
 
-        name = input("Name: ")
-        if name == "":
+        name = input("Name: ").strip()
+        if not name:
             raise ValueError("Name darf nicht leer sein.")
 
         neuer_nutzer = {
@@ -343,7 +343,9 @@ def finde_top3_buecher():
 
     print("\nTop 3 Bücher:")
 
-    for platz, buch in enumerate(sortierte_liste[:3], start=1):
+    platz = 1
+    while platz <= len(sortierte_liste[:3]):
+        buch = sortierte_liste[platz - 1]
         print(
             platz,
             ".",
@@ -352,6 +354,7 @@ def finde_top3_buecher():
             buch["ausleihen"],
             "Ausleihen"
         )
+        platz += 1
 
 
 def erstelle_bibliotheksbericht():
@@ -373,6 +376,240 @@ def erstelle_bibliotheksbericht():
 
     zaehle_buecher_pro_kategorie()
     finde_top3_buecher()
+
+
+# -----------------------------
+# Datenprüfung beim Start
+# -----------------------------
+
+def pruefe_datenbestand():
+    fehler = []
+    buch_ids = set()
+    nutzer_ids = set()
+    ausgeliehene_buecher = {}
+
+    # Zuerst wird geprüft, ob beide Datensammlungen grundsätzlich Listen sind.
+    if not isinstance(buecher, list):
+        fehler.append("Die Bücherdaten müssen als Liste vorliegen.")
+    if not isinstance(nutzer, list):
+        fehler.append("Die Nutzerdaten müssen als Liste vorliegen.")
+
+    if fehler:
+        for meldung in fehler:
+            print("Datenfehler:", meldung)
+        return False
+
+    # Bei jedem Buch werden Pflichtfelder, IDs und Inhaltswerte geprüft.
+    erforderliche_buchfelder = {
+        "id", "titel", "kategorie", "verfuegbar", "ausleihen"
+    }
+
+    position = 1
+    while position <= len(buecher):
+        buch = buecher[position - 1]
+        bezeichnung = f"Buch an Position {position}"
+
+        if not isinstance(buch, dict):
+            fehler.append(f"{bezeichnung} muss ein Datensatz sein.")
+            position += 1
+            continue
+
+        fehlende_felder = erforderliche_buchfelder - buch.keys()
+        if fehlende_felder:
+            fehler.append(
+                f"{bezeichnung} enthält nicht alle Pflichtfelder: "
+                f"{', '.join(sorted(fehlende_felder))}."
+            )
+            position += 1
+            continue
+
+        buch_id = buch["id"]
+        if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+            fehler.append(f"{bezeichnung} hat eine ungültige ID.")
+        elif buch_id in buch_ids:
+            fehler.append(f"Die Buch-ID {buch_id} ist doppelt vorhanden.")
+        else:
+            buch_ids.add(buch_id)
+
+        #prüfen, ob Titel und Kategoie leer sind oder keine Strings sind
+        if not isinstance(buch["titel"], str) or not buch["titel"].strip():
+            fehler.append(f"{bezeichnung} hat keinen gültigen Titel.")
+        if (not isinstance(buch["kategorie"], str)
+                or not buch["kategorie"].strip()):
+            fehler.append(f"{bezeichnung} hat keine gültige Kategorie.")
+        #prüfen, ob verfügbar ein bool ist und ausleihen eine positive Zahl
+        if not isinstance(buch["verfuegbar"], bool):
+            fehler.append(
+                f"{bezeichnung} muss bei 'verfuegbar' True oder False enthalten."
+            )
+        if (not isinstance(buch["ausleihen"], int)
+                or isinstance(buch["ausleihen"], bool)
+                or buch["ausleihen"] < 0):
+            fehler.append(
+                f"{bezeichnung} hat eine ungültige Anzahl an Ausleihen."
+            )
+        position += 1
+
+
+    # Bei jedem Nutzer werden Pflichtfelder, IDs und Inhaltswerte geprüft.
+    erforderliche_nutzerfelder = {
+        "id", "name", "ausgeliehen", "vormerkungen"
+    }
+
+    position = 1
+    while position <= len(nutzer):
+        person = nutzer[position - 1]
+        bezeichnung = f"Nutzer an Position {position}"
+
+        if not isinstance(person, dict):
+            fehler.append(f"{bezeichnung} muss ein Datensatz sein.")
+            position += 1
+            continue
+
+        #prüfen, ob alle Pflichtfelder vorhanden sind
+        fehlende_felder = erforderliche_nutzerfelder - person.keys()
+        if fehlende_felder:
+            fehler.append(
+                f"{bezeichnung} enthält nicht alle Pflichtfelder: "
+                f"{', '.join(sorted(fehlende_felder))}."
+            )
+            position += 1
+            continue
+
+        #prüfen, ob die ID ein Integer ist und nicht doppelt vorhanden
+        nutzer_id = person["id"]
+        if not isinstance(nutzer_id, int) or isinstance(nutzer_id, bool):
+            fehler.append(f"{bezeichnung} hat eine ungültige ID.")
+        elif nutzer_id in nutzer_ids:
+            fehler.append(f"Die Nutzer-ID {nutzer_id} ist doppelt vorhanden.")
+        else:
+            nutzer_ids.add(nutzer_id)
+
+        # Prüfen, ob Name und Vornamen leer sind oder keine Strings sind.
+        if not isinstance(person["name"], str) or not person["name"].strip():
+            fehler.append(f"{bezeichnung} hat keinen gültigen Namen.")
+        if not isinstance(person["ausgeliehen"], list):
+            fehler.append(f"{bezeichnung} hat keine gültige Ausleihliste.")
+        if not isinstance(person["vormerkungen"], list):
+            fehler.append(f"{bezeichnung} hat keine gültige Vormerkliste.")
+
+        # Prüfen, ob die Ausleihen und Vormerkungen gültige Listen sind.
+        if not isinstance(person["ausgeliehen"], list):
+            ausgeliehen = []
+        else:
+            ausgeliehen = person["ausgeliehen"]
+
+        if not isinstance(person["vormerkungen"], list):
+            vormerkungen = []
+        else:
+            vormerkungen = person["vormerkungen"]
+
+        bekannte_vormerkungen = []
+
+        #prüfen, ob die Ausleihen gültige Datensätze sind
+        ausleihe_position = 0
+        while ausleihe_position < len(ausgeliehen):
+            ausleihe = ausgeliehen[ausleihe_position]
+            if not isinstance(ausleihe, dict):
+                fehler.append(
+                    f"{bezeichnung} enthält einen ungültigen Ausleihdatensatz."
+                )
+                ausleihe_position += 1
+                continue
+
+            #prüfen, ob die Ausleihe die Pflichtfelder enthält
+            if "buch_id" not in ausleihe or "start" not in ausleihe:
+                fehler.append(
+                    f"{bezeichnung} enthält eine Ausleihe ohne Pflichtfelder."
+                )
+                ausleihe_position += 1
+                continue
+
+            #prüfen, ob die Buch-ID gültig ist und der Startwert eine positive Zahl ist
+            buch_id = ausleihe["buch_id"]
+            start = ausleihe["start"]
+            if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+                fehler.append(
+                    f"{bezeichnung} enthält eine ungültige Buch-ID."
+                )
+                ausleihe_position += 1
+                continue
+            if buch_id not in buch_ids:
+                fehler.append(
+                    f"{bezeichnung} verweist auf das unbekannte Buch "
+                    f"{buch_id}."
+                )
+            if (not isinstance(start, int) or isinstance(start, bool)
+                    or start < 1):
+                fehler.append(
+                    f"{bezeichnung} enthält einen ungültigen Ausleihbeginn."
+                )
+
+            #prüfen, ob das Buch mehreren Nutzern zugeordnet ist
+            if buch_id in ausgeliehene_buecher:
+                fehler.append(
+                    f"Das Buch {buch_id} ist mehreren Nutzern zugeordnet."
+                )
+            else:
+                ausgeliehene_buecher[buch_id] = nutzer_id
+            ausleihe_position += 1
+
+        # Eine Vormerkung darf nur auf ein vorhandenes Buch verweisen.
+        vormerkung_position = 0
+        while vormerkung_position < len(vormerkungen):
+            buch_id = vormerkungen[vormerkung_position]
+            if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+                fehler.append(
+                    f"{bezeichnung} enthält eine Vormerkung mit ungültiger "
+                    "Buch-ID."
+                )
+                vormerkung_position += 1
+                continue
+            if buch_id in bekannte_vormerkungen:
+                fehler.append(
+                    f"{bezeichnung} enthält doppelte Vormerkungen."
+                )
+            bekannte_vormerkungen.append(buch_id)
+            if buch_id not in buch_ids:
+                fehler.append(
+                    f"{bezeichnung} hat eine Vormerkung für das unbekannte "
+                    f"Buch {buch_id}."
+                )
+            vormerkung_position += 1
+        position += 1
+
+    # Zum Schluss wird der Verfügbarkeitsstatus mit den aktiven Ausleihen
+    # abgeglichen: Ein ausgeliehenes Buch darf nicht verfügbar sein.
+    buch_position = 0
+    while buch_position < len(buecher):
+        buch = buecher[buch_position]
+        if not isinstance(buch, dict) or "id" not in buch:
+            buch_position += 1
+            continue
+
+        buch_id = buch["id"]
+        # prüfen, ob die Buch-ID gültig ist
+        if not isinstance(buch_id, int) or isinstance(buch_id, bool):
+            buch_position += 1
+            continue
+        ist_ausgeliehen = buch_id in ausgeliehene_buecher
+        if ("verfuegbar" in buch
+                and buch["verfuegbar"] == ist_ausgeliehen):
+            fehler.append(
+                f"Buch {buch_id} ist bei 'verfuegbar' widersprüchlich "
+                f"zur Ausleihliste."
+            )
+        buch_position += 1
+
+    if fehler:
+        print("\n===== DATENPRÜFUNG FEHLGESCHLAGEN =====")
+        for meldung in fehler:
+            print("-", meldung)
+        print("Das Programm wird wegen fehlerhafter Startdaten beendet.")
+        return False
+
+    print("Datenprüfung erfolgreich: Alle Startdaten sind konsistent.")
+    return True
 
 
 # -----------------------------
@@ -400,7 +637,11 @@ def aendere_tag():
 # Hauptprogramm
 # -----------------------------
 
-while True:
+# der Datenbestand wird beim Start geprüft, um Inkonsistenzen zu erkennen
+startDataCorrect = pruefe_datenbestand()
+
+#der Hauptmenü-Loop wird nur gestartet, wenn die Startdaten korrekt sind
+while startDataCorrect:
 
     print("\n===== HAUPTMENÜ =====")
     print("1 Buch suchen")

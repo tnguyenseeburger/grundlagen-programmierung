@@ -1,32 +1,3 @@
-1. Leerzeichen-only Eingaben werden zunächst akzeptiert
-Schweregrad: Mittel
-
-Betroffen sind das Hinzufügen von Büchern und Nutzern, z. B. fuege_buch_hinzu und fuege_nutzer_hinzu.
-
-Aktuell wird nur geprüft:
-if titel == "":
-
-Eine Eingabe wie "   " wird deshalb akzeptiert. Das Programm fügt den Datensatz hinzu und beendet sich anschließend beim nächsten Schleifendurchlauf wegen der Datenprüfung:
-Buch erfolgreich hinzugefügt.
-Datenprüfung fehlgeschlagen:
-- Buch ... hat keinen gültigen Titel.
-- Buch ... hat keine gültige Kategorie.
-
-Dasselbe Problem besteht bei:
-
-Titel
-Kategorie
-Nutzername
-
-
-Empfehlung:
-titel = input("Titel: ").strip()
-if not titel:
-    raise ValueError("Titel darf nicht leer sein.")
-
-Entsprechend auch für kategorie und name.
-
-----------------------------------------
 
 2. Die Datenprüfung kann bei beschädigten IDs mit TypeError abstürzen
 Schweregrad: Hoch für fehlerhafte Startdaten

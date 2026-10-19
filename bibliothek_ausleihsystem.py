@@ -4,6 +4,8 @@
 
 aktueller_tag = 20
 
+ausleihfrist = 14
+
 # -----------------------------
 # Startdaten
 # -----------------------------
@@ -77,12 +79,21 @@ def suche_buecher():
         try:
             buch_id = int(input("Buch-ID: "))
             buch = suche_buch(buch_id)
-
+            ausgeliehenVon = None
+            ausgeliehenBis = None
             if buch:
+                if not buch["verfuegbar"]:
+                    for person in nutzer:
+                        for ausleihe in person["ausgeliehen"]:
+                            if ausleihe["buch_id"] == buch_id:
+                                ausgeliehenVon = person["id"]
+                                ausgeliehenBis = ausleihe["start"] + ausleihfrist
+                                break
                 print(
                     f"\nBuch gefunden: {buch['titel']} "
                     f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
-                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
+                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
+                    f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
                 )
             else:
                 print("Buch nicht gefunden.")
@@ -310,7 +321,7 @@ def leihe_buch_aus():
             person["vormerkungen"].remove(buch_id)
 
         print("Ausleihe erfolgreich.")
-        print("Rückgabe spätestens an Tag", aktueller_tag + 14)
+        print("Rückgabe spätestens an Tag", aktueller_tag + ausleihfrist)
     
     except ValueError as fehler:
         print("Fehler:", fehler)
@@ -365,7 +376,7 @@ def pruefe_leihfrist():
     for person in nutzer:
         for ausleihe in person["ausgeliehen"]:
 
-            if aktueller_tag > ausleihe["start"] + 14:
+            if aktueller_tag > ausleihe["start"] + ausleihfrist:
 
                 buch = suche_buch(ausleihe["buch_id"])
 

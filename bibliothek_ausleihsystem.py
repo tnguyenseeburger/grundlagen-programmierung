@@ -148,7 +148,7 @@ def suche_nutzer_auswahl():
                 for vorgemerkt in person["vormerkungen"]:
                     if vorgemerkteIDs:
                         vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt["buch_id"])
+                    vorgemerkteIDs += str(vorgemerkt)
                 print(
                     f"\nNutzer gefunden: {person['name']} "
                     f"(ID: {person['id']})"
@@ -174,15 +174,15 @@ def suche_nutzer_auswahl():
                 for vorgemerkt in person["vormerkungen"]:
                     if vorgemerkteIDs:
                         vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt["buch_id"])
+                    vorgemerkteIDs += str(vorgemerkt)
                 ausgelieheneIDs = ""
                 for ausleihe in person["ausgeliehen"]:
                     if ausgelieheneIDs:
                         ausgelieheneIDs += ", "
                     ausgelieheneIDs += str(ausleihe["buch_id"])
                 print(
-                    f"Nutzer: {person['name']} "
-                    f"(ID: {person['id']})"
+                    f"--- Nutzer: {person['name']} "
+                    f"(ID: {person['id']}) ---"
                     f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ''} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
                     f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
                     f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"

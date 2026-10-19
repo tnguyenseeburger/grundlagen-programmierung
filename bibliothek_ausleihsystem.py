@@ -17,8 +17,7 @@ buecher = [
 ]
 
 nutzer = [
-    {
-        "id": 12,
+    {   "id": 12,
         "name": "Anna",
         "ausgeliehen": [
             {"buch_id": 102, "start": 7}
@@ -26,8 +25,7 @@ nutzer = [
         "vormerkungen": []
     },
 
-    {
-        "id": 13,
+    {   "id": 13,
         "name": "Max",
         "ausgeliehen": [
             {"buch_id": 104, "start": 5}
@@ -35,8 +33,7 @@ nutzer = [
         "vormerkungen": []
     },
 
-    {
-        "id": 14,
+    {   "id": 14,
         "name": "Lisa",
         "ausgeliehen": [],
         "vormerkungen": [

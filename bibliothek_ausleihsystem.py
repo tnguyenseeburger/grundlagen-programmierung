@@ -145,7 +145,7 @@ def suche_nutzer_auswahl():
                         ausgelieheneIDs += ", "
                     ausgelieheneIDs += str(ausleihe["buch_id"])
                 vorgemerkteIDs = ""
-                for vorgemerkt in person["vorgemerkte"]:
+                for vorgemerkt in person["vormerkungen"]:
                     if vorgemerkteIDs:
                         vorgemerkteIDs += ", "
                     vorgemerkteIDs += str(vorgemerkt["buch_id"])
@@ -154,7 +154,7 @@ def suche_nutzer_auswahl():
                     f"(ID: {person['id']})"
                     f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ""} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
                     f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vorgemerkte']) if len(person['vorgemerkte']) > 0 else ""} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
+                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ""} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
                     f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
                 )
             else:
@@ -171,7 +171,7 @@ def suche_nutzer_auswahl():
             print("\nGefundene Nutzer:")
             for person in treffer:
                 vorgemerkteIDs = ""
-                for vorgemerkt in person["vorgemerkte"]:
+                for vorgemerkt in person["vormerkungen"]:
                     if vorgemerkteIDs:
                         vorgemerkteIDs += ", "
                     vorgemerkteIDs += str(vorgemerkt["buch_id"])
@@ -185,7 +185,7 @@ def suche_nutzer_auswahl():
                     f"(ID: {person['id']})"
                     f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ''} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
                     f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vorgemerkte']) if len(person['vorgemerkte']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
+                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
                     f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
                 )
         else:

@@ -26,3 +26,7 @@ Fachlogik möglichst von input()/print() trennen; Datenstrukturen als Parameter 
 
 Bei top 3 Büchern:
 Gleichstände in beliebiger nachvollziehbarer Reihenfolge.
+
+----------------------------------------
+
+überfällige Ausleihen bei Bibliotheksbericht

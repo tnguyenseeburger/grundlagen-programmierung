@@ -992,14 +992,21 @@ def aendere_tag():
     global aktueller_tag
 
     try:
-        neuer_tag = int(input("Neuer Tag: "))
+        neuer_tag = input("Neuer Tag: ")
 
+        if not neuer_tag.isdigit():
+            raise ValueError(
+                "Eingabe keine ganze Zahl. Nur ganze Zahlen ab 1 erlaubt."
+            )
+        neuer_tag = int(neuer_tag)
         if neuer_tag < 1:
             raise ValueError(
-                "Nur ganze Zahlen ab 1 erlaubt."
+                "Eingabe unter 1. Nur ganze Zahlen ab 1 erlaubt."
             )
+        neuer_tag = int(neuer_tag)
 
         aktueller_tag = neuer_tag
+        print("Aktueller Tag erfolgreich geändert auf:", aktueller_tag)
 
     except ValueError as fehler:
         print("Fehler:", fehler)

@@ -1036,7 +1036,7 @@ while startDataCorrect:
     print("11 Leihfristen prüfen")
     print("0 Beenden")
 
-    auswahl = input("Auswahl: ")
+    auswahl = input("\nAuswahl: ")
 
     if auswahl == "1":
         suche_buecher()

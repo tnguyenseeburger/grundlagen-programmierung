@@ -16,3 +16,8 @@ wäre sauberer.
 ----------------------------------------
 
 Überfällige Ausleihen: Nutzer-ID und Buch-ID mit ausgeben und wie lange es schon überfällig ist.
+
+---------------------------------------
+Wichtig:
+steht in der Aufgabenstellung:
+Fachlogik möglichst von input()/print() trennen; Datenstrukturen als Parameter an Funktionen übergeben. 

@@ -725,14 +725,7 @@ def finde_top3_buecher():
     platz = 1
     while platz <= len(sortierte_liste[:3]):
         buch = sortierte_liste[platz - 1]
-        print(
-            platz,
-            ".",
-            buch["titel"],
-            "-",
-            buch["ausleihen"],
-            "Ausleihen"
-        )
+        print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
         platz += 1
 
 

@@ -12,3 +12,7 @@ Dadurch ist die Datei schwer automatisiert testbar.
 Für eine einfache Konsolenabgabe ist das nicht zwingend falsch, aber eine main()-Funktion mit
 if __name__ == "__main__":
 wäre sauberer.
+
+----------------------------------------
+
+Überfällige Ausleihen: Nutzer-ID und Buch-ID mit ausgeben und wie lange es schon überfällig ist.

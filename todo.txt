@@ -21,3 +21,8 @@ wäre sauberer.
 Wichtig:
 steht in der Aufgabenstellung:
 Fachlogik möglichst von input()/print() trennen; Datenstrukturen als Parameter an Funktionen übergeben. 
+
+----------------------------------------
+
+Bei top 3 Büchern:
+Gleichstände in beliebiger nachvollziehbarer Reihenfolge.

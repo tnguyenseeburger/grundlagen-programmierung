@@ -1,7 +1,3 @@
-Datensätze ergänzen, wenn wir sie bekommen
-
----------------------------------------
-
 Die Aufgabenstellung verlangt, bestimmte Fälle zu dokumentieren und zu testen.
 In der vorliegenden Datei gibt es keine automatisierten Tests und keine dokumentierte Testübersicht.
 

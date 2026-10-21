@@ -320,74 +320,28 @@ aktueller_tag = 20
 # Suchfunktionen
 # -----------------------------
 
-def suche_buch(buch_id):
-    for buch in buecher:
-        if buch["id"] == buch_id:
-            return buch
-    return None
-
-
-def suche_buecher_text(suchtext):
-    suchtext = suchtext.lower()
-    treffer = []
-
-    for buch in buecher:
-        if (suchtext in buch["titel"].lower()
-                or suchtext in buch["kategorie"].lower()):
-            treffer.append(buch)
-
-    return treffer
-
-
-def suche_buecher():
-    print("\nSuchart:")
-    print("1 Buch-ID")
-    print("2 Titel oder Kategorie")
-    suchart = input("Auswahl: ")
-
+def suche_buecher(suchart, suche):
     if suchart == "1":
         try:
-            buch_id = int(input("Buch-ID: "))
-            buch = suche_buch(buch_id)
-            ausgeliehenVon = None
-            ausgeliehenBis = None
-            if buch:
-                if not buch["verfuegbar"]:
-                    for person in nutzer:
-                        for ausleihe in person["ausgeliehen"]:
-                            if ausleihe["buch_id"] == buch_id:
-                                ausgeliehenVon = person["id"]
-                                ausgeliehenBis = ausleihe["start"] + ausleihfrist
-                                break
-                print(
-                    f"\nBuch gefunden: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
-                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
-                    f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
-                )
-            else:
-                print("Buch nicht gefunden.")
+            buch_id = int(suche)
+            buch = None
+            for buch in buecher:
+                if buch["id"] == buch_id:
+                    return [buch]
 
         except ValueError:
             print("Ungültige Eingabe.")
 
     elif suchart == "2":
-        suchtext = input("Suchtext: ")
-        treffer = suche_buecher_text(suchtext)
-
-        if treffer:
-            print("\nGefundene Bücher:")
-            for buch in treffer:
-                print(
-                    f"Buch: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']} - "
-                    f"Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
-                )
-        else:
-            print("Keine Bücher gefunden.")
+        suche = suche.lower()
+        treffer = []     
+        for buch in buecher:
+            if (suche in buch["titel"].lower() or suche in buch["kategorie"].lower()):
+                treffer.append(buch)
+        return treffer
 
     else:
-        print("Ungültige Auswahl.")
+        return None
 
 
 def suche_nutzer(nutzer_id):
@@ -1039,7 +993,31 @@ while startDataCorrect:
     auswahl = input("\nAuswahl: ")
 
     if auswahl == "1":
-        suche_buecher()
+        print("\nSuchart:")
+        print("1 Buch-ID")
+        print("2 Titel oder Kategorie")
+        suchart = input("Auswahl: ")
+        suche = input("Suchtext: ")
+        treffer = suche_buecher(suchart, suche)
+        if treffer:
+            ausgeliehenVon = None
+            ausgeliehenBis = None
+            for buch in treffer:
+                if not buch["verfuegbar"]:
+                    for person in nutzer:
+                        for ausleihe in person["ausgeliehen"]:
+                            if ausleihe["buch_id"] == buch["id"]:
+                                ausgeliehenVon = person["id"]
+                            ausgeliehenBis = ausleihe["start"] + ausleihfrist
+                            break
+                print(
+                    f"\nBuch gefunden: {buch['titel']} "
+                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
+                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
+                    f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
+                )
+        else:
+            print("Keine Bücher gefunden.")
 
     elif auswahl == "2":
         leihe_buch_aus()

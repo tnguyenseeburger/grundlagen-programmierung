@@ -320,17 +320,20 @@ aktueller_tag = 20
 # Suchfunktionen
 # -----------------------------
 
+def suche_buch(buch_id):
+    for buch in buecher:
+        if buch["id"] == buch_id:
+            return buch
+    return None
+
 def suche_buecher(suchart, suche):
     if suchart == "1":
-        try:
-            buch_id = int(suche)
-            buch = None
-            for buch in buecher:
-                if buch["id"] == buch_id:
-                    return [buch]
+        
+        buch_id = int(suche)
+        buch = suche_buch(buch_id)
+        return [buch] if buch else []
 
-        except ValueError:
-            print("Ungültige Eingabe.")
+        
 
     elif suchart == "2":
         suche = suche.lower()
@@ -993,31 +996,36 @@ while startDataCorrect:
     auswahl = input("\nAuswahl: ")
 
     if auswahl == "1":
-        print("\nSuchart:")
-        print("1 Buch-ID")
-        print("2 Titel oder Kategorie")
-        suchart = input("Auswahl: ")
-        suche = input("Suchtext: ")
-        treffer = suche_buecher(suchart, suche)
-        if treffer:
-            ausgeliehenVon = None
-            ausgeliehenBis = None
-            for buch in treffer:
-                if not buch["verfuegbar"]:
-                    for person in nutzer:
-                        for ausleihe in person["ausgeliehen"]:
-                            if ausleihe["buch_id"] == buch["id"]:
-                                ausgeliehenVon = person["id"]
-                            ausgeliehenBis = ausleihe["start"] + ausleihfrist
-                            break
-                print(
-                    f"\nBuch gefunden: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
-                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
+        try:
+            print("\nSuchart:")
+            print("1 Buch-ID")
+            print("2 Titel oder Kategorie")
+            suchart = input("Auswahl: ")
+            suche = input("Suchtext: ")
+            treffer = suche_buecher(suchart, suche)
+            if treffer:
+                ausgeliehenVon = None
+                ausgeliehenBis = None
+                for buch in treffer:
+                    if not buch["verfuegbar"]:
+                        for person in nutzer:
+                            for ausleihe in person["ausgeliehen"]:
+                                if ausleihe["buch_id"] == buch["id"]:
+                                    ausgeliehenVon = person["id"]
+                                ausgeliehenBis = ausleihe["start"] + ausleihfrist
+                                break
+                    print(
+                        f"\nBuch gefunden: {buch['titel']} "
+                        f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
+                    )
+                    print(
+                        f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
                     f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
-                )
-        else:
-            print("Keine Bücher gefunden.")
+                    )
+            else:
+                print("Keine Bücher gefunden.")
+        except ValueError:
+            print("Ungültige Eingabe.")
 
     elif auswahl == "2":
         leihe_buch_aus()

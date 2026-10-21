@@ -1017,10 +1017,8 @@ while startDataCorrect:
                     print(
                         f"\nBuch gefunden: {buch['titel']} "
                         f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
-                    )
-                    print(
                         f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
-                    f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
+                        f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
                     )
             else:
                 print("Keine Bücher gefunden.")

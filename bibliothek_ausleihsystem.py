@@ -353,7 +353,6 @@ def suche_nutzer(nutzer_id):
             return person
     return None
 
-
 def suche_nutzer_auswahl(suchart, suche):
     if suchart == "1":
         nutzer_id = int(suche)

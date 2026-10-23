@@ -365,73 +365,16 @@ def suche_nutzer_name(name):
     return treffer
 
 
-def suche_nutzer_auswahl():
-    print("\nSuchart:")
-    print("1 Nutzer-ID")
-    print("2 Name")
-    suchart = input("Auswahl: ")
-
+def suche_nutzer_auswahl(suchart, suche):
     if suchart == "1":
-        try:
-            nutzer_id = int(input("Nutzer-ID: "))
-            person = suche_nutzer(nutzer_id)
-
-            if person:
-                ausgelieheneIDs = ""
-                for ausleihe in person["ausgeliehen"]:
-                    if ausgelieheneIDs:
-                        ausgelieheneIDs += ", "
-                    ausgelieheneIDs += str(ausleihe["buch_id"])
-                vorgemerkteIDs = ""
-                for vorgemerkt in person["vormerkungen"]:
-                    if vorgemerkteIDs:
-                        vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt)
-                print(
-                    f"\nNutzer gefunden: {person['name']} "
-                    f"(ID: {person['id']})"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ""} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
-                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ""} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
-                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
-                )
-            else:
-                print("Nutzer nicht gefunden.")
-
-        except ValueError:
-            print("Ungültige Eingabe.")
+        nutzer_id = int(suche)
+        person = suche_nutzer(nutzer_id)
+        return [person] if person else []
 
     elif suchart == "2":
-        name = input("Name: ")
-        treffer = suche_nutzer_name(name)
-
-        if treffer:
-            print("\nGefundene Nutzer:")
-            for person in treffer:
-                vorgemerkteIDs = ""
-                for vorgemerkt in person["vormerkungen"]:
-                    if vorgemerkteIDs:
-                        vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt)
-                ausgelieheneIDs = ""
-                for ausleihe in person["ausgeliehen"]:
-                    if ausgelieheneIDs:
-                        ausgelieheneIDs += ", "
-                    ausgelieheneIDs += str(ausleihe["buch_id"])
-                print(
-                    f"--- Nutzer: {person['name']} "
-                    f"(ID: {person['id']}) ---"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ''} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
-                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
-                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
-                )
-        else:
-            print("Keine Nutzer gefunden.")
-
+        return suche_nutzer_name(suche)
     else:
-        print("Ungültige Auswahl.")
-
+        return None
 
 # -----------------------------
 # Hinzufügen
@@ -1029,7 +972,68 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "10":
-        suche_nutzer_auswahl()
+        try:
+            print("\nSuchart:")
+            print("1 Nutzer-ID")
+            print("2 Name")
+            suchart = input("Auswahl: ")
+            if suchart == "1":
+                suche = input("Nutzer-ID: ")
+            else:
+                suche = input("Suchtext: ")
+            treffer = suche_nutzer_auswahl(suchart, suche)
+
+            if treffer:
+                if suchart == "1":
+                    meldung = "Nutzer gefunden:"
+                else:
+                    print("\nGefundene Nutzer:")
+
+                for person in treffer:
+                    ausgeliehene_ids = ", ".join(
+                        str(ausleihe["buch_id"])
+                        for ausleihe in person["ausgeliehen"]
+                    )
+                    vorgemerkte_ids = ", ".join(
+                        str(buch_id) for buch_id in person["vormerkungen"]
+                    )
+                    anzahl_ausgeliehen = (
+                        len(person["ausgeliehen"])
+                        if person["ausgeliehen"] else ""
+                    )
+                    anzahl_vorgemerkt = (
+                        len(person["vormerkungen"])
+                        if person["vormerkungen"] else ""
+                    )
+
+                    if suchart == "1":
+                        print(
+                            f"\n{meldung} {person['name']} "
+                            f"(ID: {person['id']})"
+                        )
+                    else:
+                        print(
+                            f"--- Nutzer: {person['name']} "
+                            f"(ID: {person['id']}) ---"
+                        )
+                    print(
+                        f"Ausgeliehene Bücher: {anzahl_ausgeliehen} "
+                        f"{'Stück mit folgenden IDs: ' if ausgeliehene_ids else ''}"
+                        f"{ausgeliehene_ids if ausgeliehene_ids else 'Keine'}"
+                    )
+                    print(
+                        f"Vorgemerkte Bücher: {anzahl_vorgemerkt} "
+                        f"{'Stück mit folgenden IDs: ' if vorgemerkte_ids else ''}"
+                        f"{vorgemerkte_ids if vorgemerkte_ids else 'Keine'}"
+                    )
+            elif suchart == "1":
+                print("Nutzer nicht gefunden.")
+            elif suchart == "2":
+                print("Keine Nutzer gefunden.")
+            else:
+                print("Ungültige Auswahl.")
+        except ValueError:
+            print("Ungültige Eingabe.")
 
     elif auswahl == "11":
         pruefe_leihfrist()

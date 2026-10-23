@@ -604,32 +604,25 @@ def pruefe_leihfrist():
 # Vormerken
 # -----------------------------
 
-def merke_buch_vor():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
+def merke_buch_vor(nutzer_id, buch_id):
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
 
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
 
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
 
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
+    if buch["verfuegbar"]:
+        raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
 
-        if buch["verfuegbar"]:
-            raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
+    if buch_id in person["vormerkungen"]:
+        raise ValueError("Doppelte Vormerkung nicht erlaubt.")
 
-        if buch_id in person["vormerkungen"]:
-            raise ValueError("Doppelte Vormerkung nicht erlaubt.")
+    person["vormerkungen"].append(buch_id)
 
-        person["vormerkungen"].append(buch_id)
-
-        print("Vormerkung erfolgreich.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    return
 
 
 # -----------------------------
@@ -1030,7 +1023,13 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "4":
-        merke_buch_vor()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            merke_buch_vor(nutzer_id, buch_id)
+            print("Vormerkung erfolgreich.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "5":
         zeige_buecher()

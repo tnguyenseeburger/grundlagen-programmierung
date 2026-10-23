@@ -554,39 +554,33 @@ def leihe_buch_aus(nutzer_id, buch_id):
 # Rückgabe
 # -----------------------------
 
-def gib_buch_zurueck():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
+def gib_buch_zurueck(nutzer_id, buch_id):
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
 
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
 
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
 
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
+    gefunden = False
 
-        gefunden = False
+    for ausleihe in person["ausgeliehen"]:
+        if ausleihe["buch_id"] == buch_id:
+            person["ausgeliehen"].remove(ausleihe)
+            gefunden = True
+            break
 
-        for ausleihe in person["ausgeliehen"]:
-            if ausleihe["buch_id"] == buch_id:
-                person["ausgeliehen"].remove(ausleihe)
-                gefunden = True
-                break
+    if not gefunden:
+        raise ValueError(
+            "Dieses Buch wurde von diesem Nutzer nicht ausgeliehen."
+        )
 
-        if not gefunden:
-            raise ValueError(
-                "Dieses Buch wurde von diesem Nutzer nicht ausgeliehen."
-            )
+    buch["verfuegbar"] = True
 
-        buch["verfuegbar"] = True
+    return
 
-        print("Buch erfolgreich zurückgegeben.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
 
 
 # -----------------------------
@@ -1032,7 +1026,13 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "3":
-        gib_buch_zurueck()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            gib_buch_zurueck(nutzer_id, buch_id)
+            print("Buch erfolgreich zurückgegeben.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "4":
         merke_buch_vor()

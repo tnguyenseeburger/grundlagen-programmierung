@@ -493,21 +493,17 @@ def gib_buch_zurueck(nutzer_id, buch_id):
 # -----------------------------
 
 def pruefe_leihfrist():
-    print("\nÜberfällige Ausleihen:")
+    ueberfaellige_ausleihen = []
 
     for person in nutzer:
         for ausleihe in person["ausgeliehen"]:
-
             if aktueller_tag > ausleihe["start"] + ausleihfrist:
-
                 buch = suche_buch(ausleihe["buch_id"])
-
-                print(
-                    person["name"],
-                    "-",
-                    buch["titel"],
-                    "(überfällig)"
+                ueberfaellige_ausleihen.append(
+                    (person["name"], buch["titel"])
                 )
+
+    return ueberfaellige_ausleihen
 
 
 # -----------------------------
@@ -1036,7 +1032,10 @@ while startDataCorrect:
             print("Ungültige Eingabe.")
 
     elif auswahl == "11":
-        pruefe_leihfrist()
+        ueberfaellige_ausleihen = pruefe_leihfrist()
+        print("\nÜberfällige Ausleihen:")
+        for name, titel in ueberfaellige_ausleihen:
+            print(name, "-", titel, "(überfällig)")
 
     elif auswahl == "0":
         print("Programm beendet.")

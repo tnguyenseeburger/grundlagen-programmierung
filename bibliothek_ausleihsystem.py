@@ -837,7 +837,7 @@ while startDataCorrect:
     print("4 Buch vormerken")
     print("5 Bücher / Nutzer anzeigen")
     print("6 Aktuellen Tag ändern")
-    print("7 Statistik und Bericht")
+    print("7 Bibliotheksbericht erstellen")
     print("8 Buch hinzufügen")
     print("9 Nutzer hinzufügen")
     print("10 Nutzer suchen")

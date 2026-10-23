@@ -460,31 +460,23 @@ def fuege_buch_hinzu(buch_id, titel, kategorie):
     buecher.append(neues_buch)
 
 
-def fuege_nutzer_hinzu():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        if nutzer_id < 0:
-            raise ValueError("Nutzer-ID darf nicht negativ sein.")
-        if suche_nutzer(nutzer_id):
-            raise ValueError("Diese Nutzer-ID existiert bereits.")
+def fuege_nutzer_hinzu(nutzer_id, name):
+    if nutzer_id < 0:
+        raise ValueError("Nutzer-ID darf nicht negativ sein.")
+    if suche_nutzer(nutzer_id):
+        raise ValueError("Diese Nutzer-ID existiert bereits.")
 
-        name = input("Name: ").strip()
-        if not name:
-            raise ValueError("Name darf nicht leer sein.")
+    if not name:
+        raise ValueError("Name darf nicht leer sein.")
 
-        neuer_nutzer = {
-            "id": nutzer_id,
-            "name": name,
-            "ausgeliehen": [],
-            "vormerkungen": []
-        }
+    neuer_nutzer = {
+        "id": nutzer_id,
+        "name": name,
+        "ausgeliehen": [],
+        "vormerkungen": []
+    }
 
-        nutzer.append(neuer_nutzer)
-
-        print("Nutzer erfolgreich hinzugefügt.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    nutzer.append(neuer_nutzer)
 
 
 # -----------------------------
@@ -1028,7 +1020,13 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "9":
-        fuege_nutzer_hinzu()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            name = input("Name: ").strip()
+            fuege_nutzer_hinzu(nutzer_id, name)
+            print("Nutzer erfolgreich hinzugefügt.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "10":
         suche_nutzer_auswahl()

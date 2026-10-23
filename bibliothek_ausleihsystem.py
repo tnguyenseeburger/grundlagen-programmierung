@@ -326,68 +326,25 @@ def suche_buch(buch_id):
             return buch
     return None
 
-
-def suche_buecher_text(suchtext):
-    suchtext = suchtext.lower()
-    treffer = []
-
-    for buch in buecher:
-        if (suchtext in buch["titel"].lower()
-                or suchtext in buch["kategorie"].lower()):
-            treffer.append(buch)
-
-    return treffer
-
-
-def suche_buecher():
-    print("\nSuchart:")
-    print("1 Buch-ID")
-    print("2 Titel oder Kategorie")
-    suchart = input("Auswahl: ")
-
+def suche_buecher(suchart, suche):
     if suchart == "1":
-        try:
-            buch_id = int(input("Buch-ID: "))
-            buch = suche_buch(buch_id)
-            ausgeliehenVon = None
-            ausgeliehenBis = None
-            if buch:
-                if not buch["verfuegbar"]:
-                    for person in nutzer:
-                        for ausleihe in person["ausgeliehen"]:
-                            if ausleihe["buch_id"] == buch_id:
-                                ausgeliehenVon = person["id"]
-                                ausgeliehenBis = ausleihe["start"] + ausleihfrist
-                                break
-                print(
-                    f"\nBuch gefunden: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
-                    f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
-                    f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
-                )
-            else:
-                print("Buch nicht gefunden.")
+        
+        buch_id = int(suche)
+        buch = suche_buch(buch_id)
+        return [buch] if buch else []
 
-        except ValueError:
-            print("Ungültige Eingabe.")
+        
 
     elif suchart == "2":
-        suchtext = input("Suchtext: ")
-        treffer = suche_buecher_text(suchtext)
-
-        if treffer:
-            print("\nGefundene Bücher:")
-            for buch in treffer:
-                print(
-                    f"Buch: {buch['titel']} "
-                    f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']} - "
-                    f"Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'}"
-                )
-        else:
-            print("Keine Bücher gefunden.")
+        suche = suche.lower()
+        treffer = []     
+        for buch in buecher:
+            if (suche in buch["titel"].lower() or suche in buch["kategorie"].lower()):
+                treffer.append(buch)
+        return treffer
 
     else:
-        print("Ungültige Auswahl.")
+        return None
 
 
 def suche_nutzer(nutzer_id):
@@ -408,232 +365,127 @@ def suche_nutzer_name(name):
     return treffer
 
 
-def suche_nutzer_auswahl():
-    print("\nSuchart:")
-    print("1 Nutzer-ID")
-    print("2 Name")
-    suchart = input("Auswahl: ")
-
+def suche_nutzer_auswahl(suchart, suche):
     if suchart == "1":
-        try:
-            nutzer_id = int(input("Nutzer-ID: "))
-            person = suche_nutzer(nutzer_id)
-
-            if person:
-                ausgelieheneIDs = ""
-                for ausleihe in person["ausgeliehen"]:
-                    if ausgelieheneIDs:
-                        ausgelieheneIDs += ", "
-                    ausgelieheneIDs += str(ausleihe["buch_id"])
-                vorgemerkteIDs = ""
-                for vorgemerkt in person["vormerkungen"]:
-                    if vorgemerkteIDs:
-                        vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt)
-                print(
-                    f"\nNutzer gefunden: {person['name']} "
-                    f"(ID: {person['id']})"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ""} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
-                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ""} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
-                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
-                )
-            else:
-                print("Nutzer nicht gefunden.")
-
-        except ValueError:
-            print("Ungültige Eingabe.")
+        nutzer_id = int(suche)
+        person = suche_nutzer(nutzer_id)
+        return [person] if person else []
 
     elif suchart == "2":
-        name = input("Name: ")
-        treffer = suche_nutzer_name(name)
-
-        if treffer:
-            print("\nGefundene Nutzer:")
-            for person in treffer:
-                vorgemerkteIDs = ""
-                for vorgemerkt in person["vormerkungen"]:
-                    if vorgemerkteIDs:
-                        vorgemerkteIDs += ", "
-                    vorgemerkteIDs += str(vorgemerkt)
-                ausgelieheneIDs = ""
-                for ausleihe in person["ausgeliehen"]:
-                    if ausgelieheneIDs:
-                        ausgelieheneIDs += ", "
-                    ausgelieheneIDs += str(ausleihe["buch_id"])
-                print(
-                    f"--- Nutzer: {person['name']} "
-                    f"(ID: {person['id']}) ---"
-                    f"\nAusgeliehene Bücher: {len(person['ausgeliehen']) if len(person['ausgeliehen']) > 0 else ''} {"Stück mit folgenden IDs: " if ausgelieheneIDs else ""}"
-                    f"{ausgelieheneIDs if ausgelieheneIDs else 'Keine'}"
-                    f"\nVorgemerkte Bücher: {len(person['vormerkungen']) if len(person['vormerkungen']) > 0 else ''} {"Stück mit folgenden IDs: " if vorgemerkteIDs else ""}"
-                    f"{vorgemerkteIDs if vorgemerkteIDs else 'Keine'}"
-                )
-        else:
-            print("Keine Nutzer gefunden.")
-
+        return suche_nutzer_name(suche)
     else:
-        print("Ungültige Auswahl.")
-
-
-# -----------------------------
-# Anzeigen
-# -----------------------------
-
-def zeige_buecher():
-    print("\nBücher:")
-    for buch in buecher:
-        print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
-
-def zeige_nutzer():
-    print("\nNutzer:")
-    for person in nutzer:
-        print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
+        return None
 
 # -----------------------------
 # Hinzufügen
 # -----------------------------
 
-def fuege_buch_hinzu():
-    try:
-        buch_id = int(input("Buch-ID: "))
+def fuege_buch_hinzu(buch_id, titel, kategorie):
+    if buch_id < 0:
+        raise ValueError("Buch-ID darf nicht negativ sein.")
+    if suche_buch(buch_id):
+        raise ValueError("Diese Buch-ID existiert bereits.")
 
-        if buch_id < 0:
-            raise ValueError("Buch-ID darf nicht negativ sein.")
-        if suche_buch(buch_id):
-            raise ValueError("Diese Buch-ID existiert bereits.")
+    if not titel:
+        raise ValueError("Titel darf nicht leer sein.")
 
-        titel = input("Titel: ").strip()
+    if not kategorie:
+        raise ValueError("Kategorie darf nicht leer sein.")
 
-        if not titel:
-            raise ValueError("Titel darf nicht leer sein.")
+    neues_buch = {
+        "id": buch_id,
+        "titel": titel,
+        "kategorie": kategorie,
+        "verfuegbar": True,
+        "ausleihen": 0
+    }
 
-        kategorie = input("Kategorie: ").strip()
-
-        if not kategorie:
-            raise ValueError("Kategorie darf nicht leer sein.")
-
-        neues_buch = {
-            "id": buch_id,
-            "titel": titel,
-            "kategorie": kategorie,
-            "verfuegbar": True,
-            "ausleihen": 0
-        }
-
-        buecher.append(neues_buch)
-        print("Buch erfolgreich hinzugefügt.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    buecher.append(neues_buch)
 
 
-def fuege_nutzer_hinzu():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        if nutzer_id < 0:
-            raise ValueError("Nutzer-ID darf nicht negativ sein.")
-        if suche_nutzer(nutzer_id):
-            raise ValueError("Diese Nutzer-ID existiert bereits.")
+def fuege_nutzer_hinzu(nutzer_id, name):
+    if nutzer_id < 0:
+        raise ValueError("Nutzer-ID darf nicht negativ sein.")
+    if suche_nutzer(nutzer_id):
+        raise ValueError("Diese Nutzer-ID existiert bereits.")
 
-        name = input("Name: ").strip()
-        if not name:
-            raise ValueError("Name darf nicht leer sein.")
+    if not name:
+        raise ValueError("Name darf nicht leer sein.")
 
-        neuer_nutzer = {
-            "id": nutzer_id,
-            "name": name,
-            "ausgeliehen": [],
-            "vormerkungen": []
-        }
+    neuer_nutzer = {
+        "id": nutzer_id,
+        "name": name,
+        "ausgeliehen": [],
+        "vormerkungen": []
+    }
 
-        nutzer.append(neuer_nutzer)
-
-        print("Nutzer erfolgreich hinzugefügt.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    nutzer.append(neuer_nutzer)
 
 
 # -----------------------------
 # Ausleihen
 # -----------------------------
 
-def leihe_buch_aus():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
-
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
-
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
-
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
-
-        if not buch["verfuegbar"]:       
-            raise ValueError("Buch ist bereits ausgeliehen. Bitte vormerken.")
-
-        if len(person["ausgeliehen"]) >= 5:
-            raise ValueError("Ausleihlimit erreicht.")
-
-        person["ausgeliehen"].append({
-            "buch_id": buch_id,
-            "start": aktueller_tag
-        })
-
-        buch["verfuegbar"] = False
-        buch["ausleihen"] += 1
-
-        if buch_id in person["vormerkungen"]:
-            person["vormerkungen"].remove(buch_id)
-
-        print("Ausleihe erfolgreich.")
-        print("Rückgabe spätestens an Tag", aktueller_tag + ausleihfrist)
+def leihe_buch_aus(nutzer_id, buch_id):
     
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
 
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
 
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
+
+    if not buch["verfuegbar"]:       
+        raise ValueError("Buch ist bereits ausgeliehen. Bitte vormerken.")
+
+    if len(person["ausgeliehen"]) >= 5:
+        raise ValueError("Ausleihlimit erreicht.")
+    person["ausgeliehen"].append({
+        "buch_id": buch_id,
+        "start": aktueller_tag
+    })
+
+    buch["verfuegbar"] = False
+    buch["ausleihen"] += 1
+
+    if buch_id in person["vormerkungen"]:
+        person["vormerkungen"].remove(buch_id)
+
+    return aktueller_tag + ausleihfrist
+    
 # -----------------------------
 # Rückgabe
 # -----------------------------
 
-def gib_buch_zurueck():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
+def gib_buch_zurueck(nutzer_id, buch_id):
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
 
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
 
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
 
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
+    gefunden = False
 
-        gefunden = False
+    for ausleihe in person["ausgeliehen"]:
+        if ausleihe["buch_id"] == buch_id:
+            person["ausgeliehen"].remove(ausleihe)
+            gefunden = True
+            break
 
-        for ausleihe in person["ausgeliehen"]:
-            if ausleihe["buch_id"] == buch_id:
-                person["ausgeliehen"].remove(ausleihe)
-                gefunden = True
-                break
+    if not gefunden:
+        raise ValueError(
+            "Dieses Buch wurde von diesem Nutzer nicht ausgeliehen."
+        )
 
-        if not gefunden:
-            raise ValueError(
-                "Dieses Buch wurde von diesem Nutzer nicht ausgeliehen."
-            )
+    buch["verfuegbar"] = True
 
-        buch["verfuegbar"] = True
+    return
 
-        print("Buch erfolgreich zurückgegeben.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
 
 
 # -----------------------------
@@ -641,53 +493,42 @@ def gib_buch_zurueck():
 # -----------------------------
 
 def pruefe_leihfrist():
-    print("\nÜberfällige Ausleihen:")
+    ueberfaellige_ausleihen = []
 
     for person in nutzer:
         for ausleihe in person["ausgeliehen"]:
-
             if aktueller_tag > ausleihe["start"] + ausleihfrist:
-
                 buch = suche_buch(ausleihe["buch_id"])
-
-                print(
-                    person["name"],
-                    "-",
-                    buch["titel"],
-                    "(überfällig)"
+                ueberfaellige_ausleihen.append(
+                    (person["name"], buch["titel"])
                 )
+
+    return ueberfaellige_ausleihen
 
 
 # -----------------------------
 # Vormerken
 # -----------------------------
 
-def merke_buch_vor():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
+def merke_buch_vor(nutzer_id, buch_id):
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
 
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
 
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
 
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
+    if buch["verfuegbar"]:
+        raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
 
-        if buch["verfuegbar"]:
-            raise ValueError("Verfügbare Bücher dürfen nicht vorgemerkt werden.")
+    if buch_id in person["vormerkungen"]:
+        raise ValueError("Doppelte Vormerkung nicht erlaubt.")
 
-        if buch_id in person["vormerkungen"]:
-            raise ValueError("Doppelte Vormerkung nicht erlaubt.")
+    person["vormerkungen"].append(buch_id)
 
-        person["vormerkungen"].append(buch_id)
-
-        print("Vormerkung erfolgreich.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    return
 
 
 # -----------------------------
@@ -698,56 +539,37 @@ def zaehle_buecher_pro_kategorie():
     statistik = {}
 
     for buch in buecher:
-
         kat = buch["kategorie"]
-
         if kat not in statistik:
             statistik[kat] = 0
-
         statistik[kat] += 1
 
-    print("\nBücher pro Kategorie:")
-
-    for kat in statistik:
-        print(kat, ":", statistik[kat])
+    return statistik
 
 
 def finde_top3_buecher():
-
     sortierte_liste = sorted(
         buecher,
         key=lambda x: x["ausleihen"],
         reverse=True
     )
 
-    print("\nTop 3 Bücher:")
-
-    platz = 1
-    while platz <= len(sortierte_liste[:3]):
-        buch = sortierte_liste[platz - 1]
-        print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
-        platz += 1
+    return sortierte_liste[:3]
 
 
 def erstelle_bibliotheksbericht():
-
     gesamt = len(buecher)
-
     verfuegbar = 0
-
     for buch in buecher:
         if buch["verfuegbar"]:
             verfuegbar += 1
 
     ausgeliehen = gesamt - verfuegbar
 
-    print("\n===== BIBLIOTHEKSBERICHT =====")
-    print("Bücher gesamt:", gesamt)
-    print("Verfügbar:", verfuegbar)
-    print("Ausgeliehen:", ausgeliehen)
+    statistik = zaehle_buecher_pro_kategorie()
+    top3 = finde_top3_buecher()
 
-    zaehle_buecher_pro_kategorie()
-    finde_top3_buecher()
+    return gesamt, verfuegbar, ausgeliehen, statistik, top3
 
 
 # -----------------------------
@@ -988,28 +810,20 @@ def pruefe_datenbestand():
 # Tag ändern
 # -----------------------------
 
-def aendere_tag():
+def aendere_tag(neuer_tag):
     global aktueller_tag
 
-    try:
-        neuer_tag = input("Neuer Tag: ")
+    if not neuer_tag.isdigit():
+        raise ValueError(
+            "Eingabe keine ganze Zahl. Nur ganze Zahlen ab 1 erlaubt."
+        )
+    neuer_tag = int(neuer_tag)
+    if neuer_tag < 1:
+        raise ValueError(
+            "Eingabe unter 1. Nur ganze Zahlen ab 1 erlaubt."
+        )
 
-        if not neuer_tag.isdigit():
-            raise ValueError(
-                "Eingabe keine ganze Zahl. Nur ganze Zahlen ab 1 erlaubt."
-            )
-        neuer_tag = int(neuer_tag)
-        if neuer_tag < 1:
-            raise ValueError(
-                "Eingabe unter 1. Nur ganze Zahlen ab 1 erlaubt."
-            )
-        neuer_tag = int(neuer_tag)
-
-        aktueller_tag = neuer_tag
-        print("Aktueller Tag erfolgreich geändert auf:", aktueller_tag)
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    aktueller_tag = neuer_tag
 
 
 # -----------------------------
@@ -1039,38 +853,189 @@ while startDataCorrect:
     auswahl = input("\nAuswahl: ")
 
     if auswahl == "1":
-        suche_buecher()
+        try:
+            print("\nSuchart:")
+            print("1 Buch-ID")
+            print("2 Titel oder Kategorie")
+            suchart = input("Auswahl: ")
+            suche = input("Suchtext: ")
+            treffer = suche_buecher(suchart, suche)
+            if treffer:
+                ausgeliehenVon = None
+                ausgeliehenBis = None
+                for buch in treffer:
+                    if not buch["verfuegbar"]:
+                        for person in nutzer:
+                            for ausleihe in person["ausgeliehen"]:
+                                if ausleihe["buch_id"] == buch["id"]:
+                                    ausgeliehenVon = person["id"]
+                                ausgeliehenBis = ausleihe["start"] + ausleihfrist
+                                break
+                    print(
+                        f"\nBuch gefunden: {buch['titel']} "
+                        f"(Kategorie: {buch['kategorie']}) - ID: {buch['id']}"
+                        f"\nVerfügbar: {'Ja' if buch['verfuegbar'] else 'Nein, ausgeliehen von Nutzer-ID: ' + str(ausgeliehenVon) if ausgeliehenVon else ""}"
+                        f"{'\nVoraussichtlich wieder verfügbar ab Tag: ' + str(ausgeliehenBis) if ausgeliehenBis else ''}"
+                    )
+            else:
+                print("Keine Bücher gefunden.")
+        except ValueError:
+            print("Ungültige Eingabe.")
 
     elif auswahl == "2":
-        leihe_buch_aus()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            ausgeliehenBis = leihe_buch_aus(nutzer_id, buch_id)
+            print("Ausleihe erfolgreich.")
+            print("Rückgabe spätestens an Tag", ausgeliehenBis)
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "3":
-        gib_buch_zurueck()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            gib_buch_zurueck(nutzer_id, buch_id)
+            print("Buch erfolgreich zurückgegeben.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "4":
-        merke_buch_vor()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            merke_buch_vor(nutzer_id, buch_id)
+            print("Vormerkung erfolgreich.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "5":
-        zeige_buecher()
-        zeige_nutzer()
+        print("\nBücher:")
+        for buch in buecher:
+            print(f"Buch: {buch['titel']} (Kategorie: {buch['kategorie']}) - ID: {buch['id']} - Verfügbar: {'Ja' if buch['verfuegbar'] else 'Nein'} - Ausleihen: {buch['ausleihen']}")
+
+        print("\nNutzer:")
+        for person in nutzer:
+            print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
 
     elif auswahl == "6":
-        aendere_tag()
+        try:
+            neuer_tag = input("Neuer Tag: ")
+            aendere_tag(neuer_tag)
+            print("Aktueller Tag erfolgreich geändert auf:", aktueller_tag)
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "7":
-        erstelle_bibliotheksbericht()
+        gesamt, verfuegbar, ausgeliehen, statistik, top3 = (
+            erstelle_bibliotheksbericht()
+        )
+
+        print("\n===== BIBLIOTHEKSBERICHT =====")
+        print("Bücher gesamt:", gesamt)
+        print("Verfügbar:", verfuegbar)
+        print("Ausgeliehen:", ausgeliehen)
+
+        print("\nBücher pro Kategorie:")
+        for kat in statistik:
+            print(kat, ":", statistik[kat])
+
+        print("\nTop 3 Bücher:")
+        platz = 1
+        while platz <= len(top3):
+            buch = top3[platz - 1]
+            print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
+            platz += 1
 
     elif auswahl == "8":
-        fuege_buch_hinzu()
+        try:
+            buch_id = int(input("Buch-ID: "))
+            titel = input("Titel: ").strip()
+            kategorie = input("Kategorie: ").strip()
+            fuege_buch_hinzu(buch_id, titel, kategorie)
+            print("Buch erfolgreich hinzugefügt.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "9":
-        fuege_nutzer_hinzu()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            name = input("Name: ").strip()
+            fuege_nutzer_hinzu(nutzer_id, name)
+            print("Nutzer erfolgreich hinzugefügt.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "10":
-        suche_nutzer_auswahl()
+        try:
+            print("\nSuchart:")
+            print("1 Nutzer-ID")
+            print("2 Name")
+            suchart = input("Auswahl: ")
+            if suchart == "1":
+                suche = input("Nutzer-ID: ")
+            else:
+                suche = input("Suchtext: ")
+            treffer = suche_nutzer_auswahl(suchart, suche)
+
+            if treffer:
+                if suchart == "1":
+                    meldung = "Nutzer gefunden:"
+                else:
+                    print("\nGefundene Nutzer:")
+
+                for person in treffer:
+                    ausgeliehene_ids = ", ".join(
+                        str(ausleihe["buch_id"])
+                        for ausleihe in person["ausgeliehen"]
+                    )
+                    vorgemerkte_ids = ", ".join(
+                        str(buch_id) for buch_id in person["vormerkungen"]
+                    )
+                    anzahl_ausgeliehen = (
+                        len(person["ausgeliehen"])
+                        if person["ausgeliehen"] else ""
+                    )
+                    anzahl_vorgemerkt = (
+                        len(person["vormerkungen"])
+                        if person["vormerkungen"] else ""
+                    )
+
+                    if suchart == "1":
+                        print(
+                            f"\n{meldung} {person['name']} "
+                            f"(ID: {person['id']})"
+                        )
+                    else:
+                        print(
+                            f"--- Nutzer: {person['name']} "
+                            f"(ID: {person['id']}) ---"
+                        )
+                    print(
+                        f"Ausgeliehene Bücher: {anzahl_ausgeliehen} "
+                        f"{'Stück mit folgenden IDs: ' if ausgeliehene_ids else ''}"
+                        f"{ausgeliehene_ids if ausgeliehene_ids else 'Keine'}"
+                    )
+                    print(
+                        f"Vorgemerkte Bücher: {anzahl_vorgemerkt} "
+                        f"{'Stück mit folgenden IDs: ' if vorgemerkte_ids else ''}"
+                        f"{vorgemerkte_ids if vorgemerkte_ids else 'Keine'}"
+                    )
+            elif suchart == "1":
+                print("Nutzer nicht gefunden.")
+            elif suchart == "2":
+                print("Keine Nutzer gefunden.")
+            else:
+                print("Ungültige Auswahl.")
+        except ValueError:
+            print("Ungültige Eingabe.")
 
     elif auswahl == "11":
-        pruefe_leihfrist()
+        ueberfaellige_ausleihen = pruefe_leihfrist()
+        print("\nÜberfällige Ausleihen:")
+        for name, titel in ueberfaellige_ausleihen:
+            print(name, "-", titel, "(überfällig)")
 
     elif auswahl == "0":
         print("Programm beendet.")

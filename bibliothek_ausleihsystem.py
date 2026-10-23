@@ -541,14 +541,14 @@ def zaehle_buecher_pro_kategorie():
     return statistik
 
 
-def finde_top3_buecher():
+def finde_top_buecher(anzahl=3):
     sortierte_liste = sorted(
         buecher,
         key=lambda x: x["ausleihen"],
         reverse=True
     )
 
-    return sortierte_liste[:3]
+    return sortierte_liste[:anzahl]
 
 
 def erstelle_bibliotheksbericht():
@@ -561,7 +561,7 @@ def erstelle_bibliotheksbericht():
     ausgeliehen = gesamt - verfuegbar
 
     statistik = zaehle_buecher_pro_kategorie()
-    top3 = finde_top3_buecher()
+    top3 = finde_top_buecher(3)
     ueberfaellige_ausleihen = pruefe_leihfrist()
 
     return (

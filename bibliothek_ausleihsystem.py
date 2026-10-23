@@ -562,8 +562,16 @@ def erstelle_bibliotheksbericht():
 
     statistik = zaehle_buecher_pro_kategorie()
     top3 = finde_top3_buecher()
+    ueberfaellige_ausleihen = pruefe_leihfrist()
 
-    return gesamt, verfuegbar, ausgeliehen, statistik, top3
+    return (
+        gesamt,
+        verfuegbar,
+        ausgeliehen,
+        statistik,
+        top3,
+        ueberfaellige_ausleihen
+    )
 
 
 # -----------------------------
@@ -922,7 +930,14 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "7":
-        gesamt, verfuegbar, ausgeliehen, statistik, top3 = (
+        (
+            gesamt,
+            verfuegbar,
+            ausgeliehen,
+            statistik,
+            top3,
+            ueberfaellige_ausleihen
+        ) = (
             erstelle_bibliotheksbericht()
         )
 
@@ -941,6 +956,20 @@ while startDataCorrect:
             buch = top3[platz - 1]
             print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
             platz += 1
+
+        print("\nÜberfällige Ausleihen:")
+        for (
+            nutzer_id,
+            nutzer_name,
+            buch_id,
+            buch_titel,
+            ueberfaellig_seit
+        ) in ueberfaellige_ausleihen:
+            print(
+                f"Nutzer: {nutzer_name} (ID: {nutzer_id}), "
+                f"Buch: {buch_titel} (ID: {buch_id}), "
+                f"Überfällig seit {ueberfaellig_seit} Tagen"
+            )
 
     elif auswahl == "8":
         try:

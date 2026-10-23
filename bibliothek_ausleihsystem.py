@@ -437,38 +437,27 @@ def suche_nutzer_auswahl():
 # Hinzufügen
 # -----------------------------
 
-def fuege_buch_hinzu():
-    try:
-        buch_id = int(input("Buch-ID: "))
+def fuege_buch_hinzu(buch_id, titel, kategorie):
+    if buch_id < 0:
+        raise ValueError("Buch-ID darf nicht negativ sein.")
+    if suche_buch(buch_id):
+        raise ValueError("Diese Buch-ID existiert bereits.")
 
-        if buch_id < 0:
-            raise ValueError("Buch-ID darf nicht negativ sein.")
-        if suche_buch(buch_id):
-            raise ValueError("Diese Buch-ID existiert bereits.")
+    if not titel:
+        raise ValueError("Titel darf nicht leer sein.")
 
-        titel = input("Titel: ").strip()
+    if not kategorie:
+        raise ValueError("Kategorie darf nicht leer sein.")
 
-        if not titel:
-            raise ValueError("Titel darf nicht leer sein.")
+    neues_buch = {
+        "id": buch_id,
+        "titel": titel,
+        "kategorie": kategorie,
+        "verfuegbar": True,
+        "ausleihen": 0
+    }
 
-        kategorie = input("Kategorie: ").strip()
-
-        if not kategorie:
-            raise ValueError("Kategorie darf nicht leer sein.")
-
-        neues_buch = {
-            "id": buch_id,
-            "titel": titel,
-            "kategorie": kategorie,
-            "verfuegbar": True,
-            "ausleihen": 0
-        }
-
-        buecher.append(neues_buch)
-        print("Buch erfolgreich hinzugefügt.")
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    buecher.append(neues_buch)
 
 
 def fuege_nutzer_hinzu():
@@ -1029,7 +1018,14 @@ while startDataCorrect:
             platz += 1
 
     elif auswahl == "8":
-        fuege_buch_hinzu()
+        try:
+            buch_id = int(input("Buch-ID: "))
+            titel = input("Titel: ").strip()
+            kategorie = input("Kategorie: ").strip()
+            fuege_buch_hinzu(buch_id, titel, kategorie)
+            print("Buch erfolgreich hinzugefügt.")
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "9":
         fuege_nutzer_hinzu()

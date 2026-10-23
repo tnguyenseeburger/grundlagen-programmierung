@@ -909,28 +909,20 @@ def pruefe_datenbestand():
 # Tag ändern
 # -----------------------------
 
-def aendere_tag():
+def aendere_tag(neuer_tag):
     global aktueller_tag
 
-    try:
-        neuer_tag = input("Neuer Tag: ")
+    if not neuer_tag.isdigit():
+        raise ValueError(
+            "Eingabe keine ganze Zahl. Nur ganze Zahlen ab 1 erlaubt."
+        )
+    neuer_tag = int(neuer_tag)
+    if neuer_tag < 1:
+        raise ValueError(
+            "Eingabe unter 1. Nur ganze Zahlen ab 1 erlaubt."
+        )
 
-        if not neuer_tag.isdigit():
-            raise ValueError(
-                "Eingabe keine ganze Zahl. Nur ganze Zahlen ab 1 erlaubt."
-            )
-        neuer_tag = int(neuer_tag)
-        if neuer_tag < 1:
-            raise ValueError(
-                "Eingabe unter 1. Nur ganze Zahlen ab 1 erlaubt."
-            )
-        neuer_tag = int(neuer_tag)
-
-        aktueller_tag = neuer_tag
-        print("Aktueller Tag erfolgreich geändert auf:", aktueller_tag)
-
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    aktueller_tag = neuer_tag
 
 
 # -----------------------------
@@ -1027,7 +1019,12 @@ while startDataCorrect:
             print(f"Nutzer: {person['name']} - ID: {person['id']} - Ausgeliehene Bücher: {len(person['ausgeliehen'])} - Vormerkungen: {len(person['vormerkungen'])}")
 
     elif auswahl == "6":
-        aendere_tag()
+        try:
+            neuer_tag = input("Neuer Tag: ")
+            aendere_tag(neuer_tag)
+            print("Aktueller Tag erfolgreich geändert auf:", aktueller_tag)
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "7":
         erstelle_bibliotheksbericht()

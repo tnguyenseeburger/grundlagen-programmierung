@@ -516,42 +516,38 @@ def fuege_nutzer_hinzu():
 # Ausleihen
 # -----------------------------
 
-def leihe_buch_aus():
-    try:
-        nutzer_id = int(input("Nutzer-ID: "))
-        buch_id = int(input("Buch-ID: "))
-
-        person = suche_nutzer(nutzer_id)
-        buch = suche_buch(buch_id)
-
-        if person is None:
-            raise ValueError("Nutzer nicht gefunden.")
-
-        if buch is None:
-            raise ValueError("Buch nicht gefunden.")
-
-        if not buch["verfuegbar"]:       
-            raise ValueError("Buch ist bereits ausgeliehen. Bitte vormerken.")
-
-        if len(person["ausgeliehen"]) >= 5:
-            raise ValueError("Ausleihlimit erreicht.")
-
-        person["ausgeliehen"].append({
-            "buch_id": buch_id,
-            "start": aktueller_tag
-        })
-
-        buch["verfuegbar"] = False
-        buch["ausleihen"] += 1
-
-        if buch_id in person["vormerkungen"]:
-            person["vormerkungen"].remove(buch_id)
-
-        print("Ausleihe erfolgreich.")
-        print("Rückgabe spätestens an Tag", aktueller_tag + ausleihfrist)
+def leihe_buch_aus(nutzer_id, buch_id):
     
-    except ValueError as fehler:
-        print("Fehler:", fehler)
+    person = suche_nutzer(nutzer_id)
+    buch = suche_buch(buch_id)
+
+    if person is None:
+        raise ValueError("Nutzer nicht gefunden.")
+
+    if buch is None:
+        raise ValueError("Buch nicht gefunden.")
+
+    if not buch["verfuegbar"]:       
+        raise ValueError("Buch ist bereits ausgeliehen. Bitte vormerken.")
+
+    if len(person["ausgeliehen"]) >= 5:
+        raise ValueError("Ausleihlimit erreicht.")
+    person["ausgeliehen"].append({
+        "buch_id": buch_id,
+        "start": aktueller_tag
+    })
+
+    buch["verfuegbar"] = False
+    buch["ausleihen"] += 1
+
+    if buch_id in person["vormerkungen"]:
+        person["vormerkungen"].remove(buch_id)
+
+    return aktueller_tag + ausleihfrist
+    
+    
+   
+        
 
 
 # -----------------------------
@@ -1026,7 +1022,14 @@ while startDataCorrect:
             print("Ungültige Eingabe.")
 
     elif auswahl == "2":
-        leihe_buch_aus()
+        try:
+            nutzer_id = int(input("Nutzer-ID: "))
+            buch_id = int(input("Buch-ID: "))
+            ausgeliehenBis = leihe_buch_aus(nutzer_id, buch_id)
+            print("Ausleihe erfolgreich.")
+            print("Rückgabe spätestens an Tag", ausgeliehenBis)
+        except ValueError as fehler:
+            print("Fehler:", fehler)
 
     elif auswahl == "3":
         gib_buch_zurueck()

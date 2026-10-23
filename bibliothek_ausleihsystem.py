@@ -545,11 +545,6 @@ def leihe_buch_aus(nutzer_id, buch_id):
 
     return aktueller_tag + ausleihfrist
     
-    
-   
-        
-
-
 # -----------------------------
 # Rückgabe
 # -----------------------------

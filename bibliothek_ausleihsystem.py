@@ -619,56 +619,37 @@ def zaehle_buecher_pro_kategorie():
     statistik = {}
 
     for buch in buecher:
-
         kat = buch["kategorie"]
-
         if kat not in statistik:
             statistik[kat] = 0
-
         statistik[kat] += 1
 
-    print("\nBücher pro Kategorie:")
-
-    for kat in statistik:
-        print(kat, ":", statistik[kat])
+    return statistik
 
 
 def finde_top3_buecher():
-
     sortierte_liste = sorted(
         buecher,
         key=lambda x: x["ausleihen"],
         reverse=True
     )
 
-    print("\nTop 3 Bücher:")
-
-    platz = 1
-    while platz <= len(sortierte_liste[:3]):
-        buch = sortierte_liste[platz - 1]
-        print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
-        platz += 1
+    return sortierte_liste[:3]
 
 
 def erstelle_bibliotheksbericht():
-
     gesamt = len(buecher)
-
     verfuegbar = 0
-
     for buch in buecher:
         if buch["verfuegbar"]:
             verfuegbar += 1
 
     ausgeliehen = gesamt - verfuegbar
 
-    print("\n===== BIBLIOTHEKSBERICHT =====")
-    print("Bücher gesamt:", gesamt)
-    print("Verfügbar:", verfuegbar)
-    print("Ausgeliehen:", ausgeliehen)
+    statistik = zaehle_buecher_pro_kategorie()
+    top3 = finde_top3_buecher()
 
-    zaehle_buecher_pro_kategorie()
-    finde_top3_buecher()
+    return gesamt, verfuegbar, ausgeliehen, statistik, top3
 
 
 # -----------------------------
@@ -1027,7 +1008,25 @@ while startDataCorrect:
             print("Fehler:", fehler)
 
     elif auswahl == "7":
-        erstelle_bibliotheksbericht()
+        gesamt, verfuegbar, ausgeliehen, statistik, top3 = (
+            erstelle_bibliotheksbericht()
+        )
+
+        print("\n===== BIBLIOTHEKSBERICHT =====")
+        print("Bücher gesamt:", gesamt)
+        print("Verfügbar:", verfuegbar)
+        print("Ausgeliehen:", ausgeliehen)
+
+        print("\nBücher pro Kategorie:")
+        for kat in statistik:
+            print(kat, ":", statistik[kat])
+
+        print("\nTop 3 Bücher:")
+        platz = 1
+        while platz <= len(top3):
+            buch = top3[platz - 1]
+            print(f"{platz}. {buch['titel']} - {buch['ausleihen']} Ausleihen")
+            platz += 1
 
     elif auswahl == "8":
         fuege_buch_hinzu()

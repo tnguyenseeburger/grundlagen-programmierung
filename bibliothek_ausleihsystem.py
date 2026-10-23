@@ -354,17 +354,6 @@ def suche_nutzer(nutzer_id):
     return None
 
 
-def suche_nutzer_name(name):
-    name = name.lower()
-    treffer = []
-
-    for person in nutzer:
-        if name in person["name"].lower():
-            treffer.append(person)
-
-    return treffer
-
-
 def suche_nutzer_auswahl(suchart, suche):
     if suchart == "1":
         nutzer_id = int(suche)
@@ -372,7 +361,12 @@ def suche_nutzer_auswahl(suchart, suche):
         return [person] if person else []
 
     elif suchart == "2":
-        return suche_nutzer_name(suche)
+        suche = suche.lower()
+        treffer = []
+        for person in nutzer:
+            if suche in person["name"].lower():
+                treffer.append(person)
+        return treffer
     else:
         return None
 

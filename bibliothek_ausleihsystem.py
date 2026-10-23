@@ -492,8 +492,9 @@ def pruefe_leihfrist():
         for ausleihe in person["ausgeliehen"]:
             if aktueller_tag > ausleihe["start"] + ausleihfrist:
                 buch = suche_buch(ausleihe["buch_id"])
+                ueberfaellig_seit = aktueller_tag - (ausleihe["start"] + ausleihfrist)
                 ueberfaellige_ausleihen.append(
-                    (person["name"], buch["titel"])
+                    (person["id"],person["name"],buch["id"],buch["titel"],ueberfaellig_seit)
                 )
 
     return ueberfaellige_ausleihen
@@ -1027,8 +1028,8 @@ while startDataCorrect:
     elif auswahl == "11":
         ueberfaellige_ausleihen = pruefe_leihfrist()
         print("\nÜberfällige Ausleihen:")
-        for name, titel in ueberfaellige_ausleihen:
-            print(name, "-", titel, "(überfällig)")
+        for nutzer_id, nutzer_name, buch_id, buch_titel, ueberfaellig_seit in ueberfaellige_ausleihen:
+            print(f"Nutzer: {nutzer_name} (ID: {nutzer_id}), Buch: {buch_titel} (ID: {buch_id}), Überfällig seit {ueberfaellig_seit} Tagen")
 
     elif auswahl == "0":
         print("Programm beendet.")

@@ -15,10 +15,6 @@ wäre sauberer.
 
 ----------------------------------------
 
-Überfällige Ausleihen: Nutzer-ID und Buch-ID mit ausgeben und wie lange es schon überfällig ist.
-
----------------------------------------
-
 Bei top 3 Büchern:
 Gleichstände in beliebiger nachvollziehbarer Reihenfolge.
 
